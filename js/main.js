@@ -119,8 +119,17 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
     },
   ];
 
+  const pauseBtn = $("vpause");
+  const setAuto = (v) => {
+    auto = v && !reduce; viewer.classList.toggle("manual", !auto);
+    if (pauseBtn) {
+      pauseBtn.classList.toggle("paused", !auto);
+      pauseBtn.setAttribute("aria-label", auto ? "Mettre en pause la démonstration animée" : "Reprendre la démonstration animée");
+    }
+  };
+  pauseBtn?.addEventListener("click", () => { if (!auto) elapsed = 0; setAuto(!auto); });
   const select = (i, user = false) => {
-    if (user) { auto = false; viewer.classList.add("manual"); }
+    if (user) setAuto(false);
     token++; clearInterval(clockTimer); elapsed = 0;
     cur.getAnimations().forEach((a) => a.cancel()); cur.style.opacity = 0; toast.classList.remove("on");
     tabs.forEach((t, k) => { const on = k === i; t.classList.toggle("on", on); t.setAttribute("aria-selected", on); t.tabIndex = on ? 0 : -1; t.style.setProperty("--p", 0); });
@@ -128,6 +137,7 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
     const p = panels[i]; p.hidden = false; void p.offsetWidth; p.classList.add("play");
     shot.querySelectorAll(".app-side a").forEach((a) => a.classList.toggle("on", a.dataset.nav === p.dataset.nav));
     cur_i = i;
+    const tl = viewer.querySelector(".vtabs"); tl.scrollTo({ left: Math.max(0, tabs[i].offsetLeft - 16), behavior: reduce ? "auto" : "smooth" });
     if (reduce) resets[i](); else scenes[i](token);
   };
   tabs.forEach((t, i) => {
@@ -147,10 +157,11 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
     const dt = Math.min(t - last, 100); last = t;
     if (auto && !paused && visible && !document.hidden) {
       elapsed += dt; tabs[cur_i].style.setProperty("--p", Math.min(elapsed / DWELL, 1));
-      if (elapsed >= DWELL) select((cur_i + 1) % tabs.length);
+      if (elapsed >= DWELL) { if (cur_i === tabs.length - 1) setAuto(false); else select(cur_i + 1); }
     }
     requestAnimationFrame(tick);
   };
+  setAuto(auto);
   select(0);
   if (!reduce) requestAnimationFrame(tick);
 
@@ -164,4 +175,60 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
     });
     wrap.addEventListener("pointerleave", () => { shot.style.setProperty("--rx", "0deg"); shot.style.setProperty("--ry", "0deg"); });
   }
+})();
+
+// ===== Navigation: dropdown, mobile menu =====
+(() => {
+  const btn = document.querySelector(".dd-btn"), panel = document.getElementById("dd-feat");
+  const close = () => { if (btn) { btn.setAttribute("aria-expanded", "false"); panel.hidden = true; } };
+  btn?.addEventListener("click", (e) => { e.stopPropagation(); const o = btn.getAttribute("aria-expanded") === "true"; btn.setAttribute("aria-expanded", !o); panel.hidden = o; });
+  document.addEventListener("click", (e) => { if (panel && !panel.contains(e.target)) close(); });
+  panel?.querySelectorAll("a").forEach((a) => a.addEventListener("click", close));
+  const mb = document.getElementById("menu-btn"), mm = document.getElementById("mobile-menu");
+  const mclose = () => { if (mb) { mb.setAttribute("aria-expanded", "false"); mm.hidden = true; } };
+  mb?.addEventListener("click", () => { const o = mb.getAttribute("aria-expanded") === "true"; mb.setAttribute("aria-expanded", !o); mm.hidden = o; });
+  mm?.querySelectorAll("a").forEach((a) => a.addEventListener("click", mclose));
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") { close(); mclose(); } });
+  matchMedia("(min-width: 861px)").addEventListener("change", mclose);
+})();
+
+// ===== Workflow: light up each step in order as it scrolls into view =====
+(() => {
+  const list = document.getElementById("steps"); if (!list) return;
+  const steps = [...list.querySelectorAll(".step")], fill = document.getElementById("rail-fill"), rail = list.querySelector(".rail");
+  const vertical = () => matchMedia("(max-width: 900px)").matches;
+  const set = (n) => {
+    steps.forEach((s, i) => s.classList.toggle("on", i < n));
+    rail.classList.toggle("v", vertical());
+    const frac = n <= 1 ? 0 : (n - 1) / (steps.length - 1);
+    if (vertical()) fill.style.height = frac * 100 + "%"; else fill.style.width = frac * 100 + "%";
+  };
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) { set(steps.length); return; }
+  let done = false;
+  new IntersectionObserver((es) => {
+    if (!es[0].isIntersecting || done) return; done = true;
+    steps.forEach((_, i) => setTimeout(() => set(i + 1), 350 * i + 150));
+  }, { threshold: 0.35 }).observe(list);
+})();
+
+// ===== Lead dialog (front-end only; no endpoint is wired) =====
+(() => {
+  const dlg = document.getElementById("lead-dialog"); if (!dlg || !dlg.showModal) return;
+  const form = document.getElementById("lead-form"), err = document.getElementById("f-err"), done = document.getElementById("f-done");
+  const copy = { trial: ["Essai gratuit", "14 jours, sans carte de crédit.", "Commencer"], demo: ["Réserver une démo", "Un de nos experts vous contacte pour évaluer vos besoins.", "Prenons rendez-vous"] };
+  document.querySelectorAll("[data-open]").forEach((a) => a.addEventListener("click", (e) => {
+    e.preventDefault(); const c = copy[a.dataset.open];
+    document.getElementById("dlg-title").textContent = c[0]; document.getElementById("dlg-sub").textContent = c[1]; document.getElementById("f-submit").textContent = c[2];
+    err.hidden = done.hidden = true; dlg.showModal(); document.getElementById("f-name").focus();
+  }));
+  dlg.querySelector("[data-close]").addEventListener("click", () => dlg.close());
+  dlg.addEventListener("click", (e) => { if (e.target === dlg) dlg.close(); });
+  form.addEventListener("submit", (e) => {
+    e.preventDefault(); done.hidden = true;
+    const name = form.elements.name, email = form.elements.email;
+    [name, email].forEach((f) => f.removeAttribute("aria-invalid"));
+    const bad = !name.value.trim() ? name : !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value) ? email : null;
+    if (bad) { bad.setAttribute("aria-invalid", "true"); err.textContent = bad === name ? "Indiquez votre nom." : "Indiquez un courriel valide."; err.hidden = false; bad.focus(); return; }
+    err.hidden = true; done.hidden = false; // TODO: POST to the CRM / form endpoint
+  });
 })();

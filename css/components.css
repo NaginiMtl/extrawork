@@ -48,3 +48,6 @@ p{margin:0}
 @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
 
 .c-blue{--c:var(--c-blue)}.c-green{--c:var(--c-green)}.c-orange{--c:var(--c-orange)}
+.card{box-shadow:var(--card-shadow)}
+.skip{position:absolute;left:var(--s-4);top:-48px;z-index:100;padding:10px 16px;border-radius:var(--r-sm);background:var(--text);color:var(--bg);font-size:.875rem;transition:top .2s}
+.skip:focus{top:var(--s-3)}

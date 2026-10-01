@@ -20,55 +20,148 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
   try { localStorage.setItem("kiwili-theme", root.dataset.theme); } catch (e) {}
 });
 
-// ===== Hero product loop: counters, cursor click, status change, toast =====
+// ===== Hero: interactive product viewer =====
 (() => {
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const $ = (id) => document.getElementById(id);
+  const viewer = $("viewer"), shot = $("shot"), cur = $("cursor"), toast = $("toast");
+  if (!viewer) return;
+  const tabs = [...viewer.querySelectorAll(".vtab")], panels = [...viewer.querySelectorAll(".vpanel")];
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const fmt = (n, d = 0) => new Intl.NumberFormat("fr-CA", { minimumFractionDigits: d, maximumFractionDigits: d }).format(n);
-  const tween = (el, to, { suffix = "", dec = 0, from = 0, ms = 1400 } = {}) => {
-    const t0 = performance.now();
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const DWELL = 9000;
+  let cur_i = -1, token = 0, auto = !reduce, paused = false, elapsed = 0, k2 = 3487238, clockTimer = 0;
+
+  const tween = (el, to, { suffix = "", dec = 0, from = 0, ms = 1200 } = {}) => {
+    if (reduce) { el.textContent = fmt(to, dec) + suffix; return; }
+    const t0 = performance.now(), tk = token;
     const step = (t) => {
+      if (tk !== token && el.dataset.keep !== "1") return;
       const p = Math.min((t - t0) / ms, 1), e = 1 - Math.pow(1 - p, 3);
       el.textContent = fmt(from + (to - from) * e, dec) + suffix;
       if (p < 1) requestAnimationFrame(step);
     };
     requestAnimationFrame(step);
   };
-  const kpis = { k1: [1626583, " $", 0], k2: [3487238, " $", 0], k3: [70600, " $", 0], k4: [208.5, " h", 1] };
-  Object.entries(kpis).forEach(([id, [v, s, d]]) => tween($(id), v, { suffix: s, dec: d }));
 
-  const shot = $("shot"), cur = $("cursor"), tag = $("live-tag"), row = $("row-live"), toast = $("toast");
-  if (!shot || !cur || !tag) return;
-  let paid = false, k2 = 3487238;
-
-  const loop = async () => {
-    const sr = shot.getBoundingClientRect(), tr = tag.getBoundingClientRect();
-    const x = tr.left - sr.left + tr.width / 2, y = tr.top - sr.top + tr.height / 2;
+  const cursorTo = async (el, tk) => {
+    const sr = shot.getBoundingClientRect(), r = el.getBoundingClientRect();
+    const x = r.left - sr.left + r.width / 2, y = r.top - sr.top + r.height / 2;
     cur.style.opacity = 1;
-    await cur.animate([{ transform: `translate(${sr.width * 0.55}px,${sr.height * 0.85}px)` }, { transform: `translate(${x}px,${y}px)` }],
-      { duration: 1400, easing: "cubic-bezier(.2,.7,.2,1)", fill: "forwards" }).finished;
-    await cur.animate([{ scale: 1 }, { scale: 0.8 }, { scale: 1 }], { duration: 260 }).finished;
-    paid = !paid;
-    tag.className = "tag " + (paid ? "ok" : "wait");
-    tag.textContent = paid ? "Payée" : "En attente";
-    row.classList.remove("flash"); void row.offsetWidth; row.classList.add("flash");
-    if (paid) {
-      toast.classList.add("on");
-      const next = k2 + 8912.5; tween($("k2"), next, { suffix: " $", from: k2, ms: 900 }); k2 = next;
-      setTimeout(() => toast.classList.remove("on"), 2600);
-    }
-    await new Promise((r) => setTimeout(r, 900));
-    await cur.animate({ opacity: [1, 0] }, { duration: 400, fill: "forwards" }).finished;
-    setTimeout(loop, 2600);
+    await cur.animate([{ transform: `translate(${sr.width * 0.6}px,${sr.height * 0.9}px)` }, { transform: `translate(${x}px,${y}px)` }],
+      { duration: 1300, easing: "cubic-bezier(.2,.7,.2,1)", fill: "forwards" }).finished;
+    if (tk !== token) return false;
+    await cur.animate([{ scale: 1 }, { scale: 0.78 }, { scale: 1 }], { duration: 240 }).finished;
+    return tk === token;
   };
-  setTimeout(loop, 2600);
+  const showToast = (t, d, ms = 2600) => {
+    $("toast-t").textContent = t; $("toast-d").textContent = d;
+    toast.classList.add("on"); const tk = token;
+    setTimeout(() => { if (tk === token) toast.classList.remove("on"); }, ms);
+  };
+  const retire = () => cur.animate({ opacity: [1, 0] }, { duration: 350, fill: "forwards" });
 
-  // gentle parallax tilt that follows the pointer
-  const wrap = shot.parentNode;
-  wrap.addEventListener("pointermove", (e) => {
-    const r = wrap.getBoundingClientRect();
-    shot.style.setProperty("--ry", ((e.clientX - r.left) / r.width - 0.5) * 4 + "deg");
-    shot.style.setProperty("--rx", (0.5 - (e.clientY - r.top) / r.height) * 2 + "deg");
+  const setTag = (el, cls, txt) => { el.className = "tag " + cls; el.textContent = txt; };
+  const flash = (el) => { el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); };
+
+  // Final (static) values, used by reduced motion and as reset targets
+  const resets = {
+    0() { setTag($("live-tag"), "wait", "En attente"); k2 = 3487238; $("k2").textContent = "3 487 238 $"; $("k1").textContent = "1 626 583 $"; $("k3").textContent = "70 600 $"; $("k4").textContent = "208,5 h"; },
+    1() { setTag($("inv-status"), "wait", "Brouillon"); $("inv-total").textContent = "9 588,92 $"; $("inv-send").classList.remove("pressed"); $("inv-send").textContent = "Envoyer la facture"; },
+    2() { const n = $("move-note"), cols = panels[2].querySelectorAll(".board .col"); cols[1].appendChild(n); panels[2].querySelectorAll(".hrs").forEach((h) => (h.textContent = h.dataset.to)); },
+    3() { $("b-fact").textContent = "31 200 $"; $("b-marge").textContent = "29,4 %"; },
+    4() { $("clock").textContent = "02:14:07"; $("timer-btn").textContent = "Arrêter"; $("timer-btn").classList.add("stop"); },
+  };
+  const scenes = [
+    async (tk) => {
+      resets[0]();
+      tween($("k1"), 1626583, { suffix: " $" }); tween($("k2"), 3487238, { suffix: " $" }); tween($("k3"), 70600, { suffix: " $" }); tween($("k4"), 208.5, { suffix: " h", dec: 1 });
+      await sleep(2300); if (tk !== token) return;
+      if (!(await cursorTo($("live-tag"), tk))) return;
+      setTag($("live-tag"), "ok", "Payée"); flash($("row-live"));
+      const next = k2 + 8912.5; $("k2").dataset.keep = "0"; tween($("k2"), next, { suffix: " $", from: k2, ms: 900 }); k2 = next;
+      showToast("Facture payée", "Cabinet d'architecture · 8 912,50 $"); await sleep(700); retire();
+    },
+    async (tk) => {
+      resets[1](); $("inv-total").textContent = "0,00 $";
+      await sleep(1500); if (tk !== token) return;
+      tween($("inv-total"), 9588.92, { suffix: " $", dec: 2, ms: 1000 });
+      await sleep(1900); if (tk !== token) return;
+      if (!(await cursorTo($("inv-send"), tk))) return;
+      $("inv-send").classList.add("pressed"); $("inv-send").textContent = "Envoyée";
+      setTag($("inv-status"), "sent", "Envoyée");
+      showToast("Facture envoyée", "Cabinet d'architecture · 9 588,92 $"); await sleep(700); retire();
+    },
+    async (tk) => {
+      resets[2](); panels[2].querySelectorAll(".hrs").forEach((h) => (h.textContent = "0"));
+      panels[2].querySelectorAll(".hrs").forEach((h) => tween(h, +h.dataset.to, { ms: 1400 }));
+      await sleep(2800); if (tk !== token) return;
+      const n = $("move-note"), cols = panels[2].querySelectorAll(".board .col");
+      const a = n.getBoundingClientRect(); cols[2].appendChild(n); const b = n.getBoundingClientRect();
+      n.animate([{ transform: `translate(${a.left - b.left}px,${a.top - b.top}px)` }, { transform: "none" }], { duration: 650, easing: "cubic-bezier(.2,.7,.2,1)" });
+      n.classList.remove("d"); n.classList.add("g");
+      showToast("Tâche terminée", "Premiers dessins · Amélie C.");
+    },
+    async (tk) => {
+      $("b-fact").textContent = "0 $"; $("b-marge").textContent = "0 %";
+      await sleep(500); if (tk !== token) return;
+      tween($("b-fact"), 31200, { suffix: " $", ms: 1500 }); tween($("b-marge"), 29.4, { suffix: " %", dec: 1, ms: 1500 });
+    },
+    async (tk) => {
+      resets[4]();
+      let s = 2 * 3600 + 14 * 60 + 7; const btn = $("timer-btn"); let running = true;
+      const paint = () => { $("clock").textContent = [Math.floor(s / 3600), Math.floor(s / 60) % 60, s % 60].map((v) => String(v).padStart(2, "0")).join(":"); };
+      clearInterval(clockTimer); clockTimer = setInterval(() => { if (tk !== token) return clearInterval(clockTimer); if (running) { s++; paint(); } }, 1000);
+      await sleep(3200); if (tk !== token) return;
+      if (!(await cursorTo(btn, tk))) return;
+      running = false; btn.textContent = "Reprendre"; btn.classList.remove("stop");
+      showToast("Temps enregistré", "2 h 14 · Rénovation condo"); await sleep(700); retire();
+    },
+  ];
+
+  const select = (i, user = false) => {
+    if (user) { auto = false; viewer.classList.add("manual"); }
+    token++; clearInterval(clockTimer); elapsed = 0;
+    cur.getAnimations().forEach((a) => a.cancel()); cur.style.opacity = 0; toast.classList.remove("on");
+    tabs.forEach((t, k) => { const on = k === i; t.classList.toggle("on", on); t.setAttribute("aria-selected", on); t.tabIndex = on ? 0 : -1; t.style.setProperty("--p", 0); });
+    panels.forEach((p, k) => { if (k !== i) { p.hidden = true; p.classList.remove("play"); } });
+    const p = panels[i]; p.hidden = false; void p.offsetWidth; p.classList.add("play");
+    shot.querySelectorAll(".app-side a").forEach((a) => a.classList.toggle("on", a.dataset.nav === p.dataset.nav));
+    cur_i = i;
+    if (reduce) resets[i](); else scenes[i](token);
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => select(i, true));
+    t.addEventListener("keydown", (e) => {
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      const n = (i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length; tabs[n].focus(); select(n, true);
+    });
   });
-  wrap.addEventListener("pointerleave", () => { shot.style.setProperty("--rx", "0deg"); shot.style.setProperty("--ry", "0deg"); });
+
+  // autoplay with a progress line on the active tab; pauses on hover and when off-screen
+  let visible = true, last = performance.now();
+  new IntersectionObserver((es) => { visible = es[0].isIntersecting; }, { threshold: 0.25 }).observe(viewer);
+  viewer.addEventListener("pointerenter", () => (paused = true));
+  viewer.addEventListener("pointerleave", () => (paused = false));
+  const tick = (t) => {
+    const dt = Math.min(t - last, 100); last = t;
+    if (auto && !paused && visible && !document.hidden) {
+      elapsed += dt; tabs[cur_i].style.setProperty("--p", Math.min(elapsed / DWELL, 1));
+      if (elapsed >= DWELL) select((cur_i + 1) % tabs.length);
+    }
+    requestAnimationFrame(tick);
+  };
+  select(0);
+  if (!reduce) requestAnimationFrame(tick);
+
+  // gentle tilt that follows the pointer
+  const wrap = shot.parentNode;
+  if (!reduce) {
+    wrap.addEventListener("pointermove", (e) => {
+      const r = wrap.getBoundingClientRect();
+      shot.style.setProperty("--ry", ((e.clientX - r.left) / r.width - 0.5) * 3 + "deg");
+      shot.style.setProperty("--rx", (0.5 - (e.clientY - r.top) / r.height) * 1.5 + "deg");
+    });
+    wrap.addEventListener("pointerleave", () => { shot.style.setProperty("--rx", "0deg"); shot.style.setProperty("--ry", "0deg"); });
+  }
 })();

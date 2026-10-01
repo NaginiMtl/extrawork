@@ -30,36 +30,107 @@
     <div class="rating"><span class="stars" aria-hidden="true">★★★★★</span><span><b>4,9</b> sur Google</span></div>
   </div>
 
-  <div class="shot-wrap"><div class="shot" id="shot" role="img" aria-label="Tableau de bord Kiwili : devis, factures, dépenses et paiements">
+  <div class="viewer" id="viewer">
+  <div class="vtabs" role="tablist" aria-label="Aperçu du logiciel"><button class="vtab on" role="tab" id="tab0" aria-selected="true" aria-controls="p0" data-i="0"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>Tableau de bord<i class="prog"></i></button><button class="vtab" role="tab" id="tab1" aria-selected="false" aria-controls="p1" data-i="1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h8l4 4v14H7z"/><path d="M15 3v4h4M10 12h6M10 16h4"/></svg>Facturation<i class="prog"></i></button><button class="vtab" role="tab" id="tab2" aria-selected="false" aria-controls="p2" data-i="2"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h10M4 12h16M4 18h8"/></svg>Projets<i class="prog"></i></button><button class="vtab" role="tab" id="tab3" aria-selected="false" aria-controls="p3" data-i="3"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10m6 10V4m6 16v-7m4 7H3"/></svg>Budgets<i class="prog"></i></button><button class="vtab" role="tab" id="tab4" aria-selected="false" aria-controls="p4" data-i="4"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></svg>Temps<i class="prog"></i></button></div>
+  <div class="shot-wrap">
+  <div class="shot" id="shot">
     <div class="app">
-      <aside class="app-side">
+      <aside class="app-side" aria-hidden="true">
         <div class="org"><i></i>Cabinet Archi</div>
-        <a class="on">Tableau de bord</a><a>Clients</a><a>Devis</a><a>Factures</a><a>Projets</a><a>Temps</a><a>Dépenses</a><a>Comptabilité</a>
+        <a data-nav="Tableau de bord">Tableau de bord</a><a data-nav="Clients">Clients</a><a data-nav="Devis">Devis</a><a data-nav="Factures">Factures</a><a data-nav="Projets">Projets</a><a data-nav="Temps">Temps</a><a data-nav="Dépenses">Dépenses</a><a data-nav="Comptabilité">Comptabilité</a>
       </aside>
       <div class="app-main">
-        <div class="app-head"><h4>Tableau de bord</h4><span>Octobre 2026</span></div>
-        <div class="kpis">
-          <div class="kpi"><span>Devis envoyés</span><b id="k1">1 626 583 $</b></div>
-          <div class="kpi"><span>Factures envoyées</span><b id="k2">3 487 238 $</b></div>
-          <div class="kpi"><span>Dépenses à payer</span><b id="k3">70 600 $</b></div>
-          <div class="kpi"><span>Heures à faire</span><b id="k4">208,5 h</b></div>
-        </div>
-        <table class="tbl">
-          <thead><tr><th>Projet</th><th>Client</th><th>Échéance</th><th class="r">Montant</th><th>Statut</th></tr></thead>
-          <tbody>
-            <tr><td>Rénovation condo</td><td>Georges François</td><td>30 oct.</td><td class="r">12 480,00 $</td><td><span class="tag ok">Payée</span></td></tr>
-            <tr id="row-live"><td>Projet Rénovation Architecture</td><td>Cabinet d'architecture</td><td>04 nov.</td><td class="r">8 912,50 $</td><td><span class="tag wait" id="live-tag">En attente</span></td></tr>
-            <tr><td>Décoration intérieure</td><td>ACME Inc.</td><td>12 oct.</td><td class="r">3 260,00 $</td><td><span class="tag late">En retard</span></td></tr>
-            <tr><td>Rénovation chambre</td><td>Client 1 Archi</td><td>21 nov.</td><td class="r">5 730,00 $</td><td><span class="tag wait">En attente</span></td></tr>
-          </tbody>
-        </table>
+
+        <section class="vpanel active" role="tabpanel" id="p0" aria-labelledby="tab0" data-nav="Tableau de bord">
+          <div class="app-head"><h4>Tableau de bord</h4><span>Octobre 2026</span></div>
+          <div class="kpis">
+            <div class="kpi"><span>Devis envoyés</span><b id="k1">1 626 583 $</b></div>
+            <div class="kpi"><span>Factures envoyées</span><b id="k2">3 487 238 $</b></div>
+            <div class="kpi"><span>Dépenses à payer</span><b id="k3">70 600 $</b></div>
+            <div class="kpi"><span>Heures à faire</span><b id="k4">208,5 h</b></div>
+          </div>
+          <table class="tbl">
+            <thead><tr><th>Projet</th><th>Client</th><th>Échéance</th><th class="r">Montant</th><th>Statut</th></tr></thead>
+            <tbody>
+              <tr><td>Rénovation condo</td><td>Georges François</td><td>30 oct.</td><td class="r">12 480,00 $</td><td><span class="tag ok">Payée</span></td></tr>
+              <tr id="row-live"><td>Projet Rénovation Architecture</td><td>Cabinet d'architecture</td><td>04 nov.</td><td class="r">8 912,50 $</td><td><span class="tag wait" id="live-tag">En attente</span></td></tr>
+              <tr><td>Décoration intérieure</td><td>ACME Inc.</td><td>12 oct.</td><td class="r">3 260,00 $</td><td><span class="tag late">En retard</span></td></tr>
+              <tr><td>Rénovation chambre</td><td>Client 1 Archi</td><td>21 nov.</td><td class="r">5 730,00 $</td><td><span class="tag wait">En attente</span></td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="vpanel" role="tabpanel" id="p1" aria-labelledby="tab1" data-nav="Factures" hidden>
+          <div class="app-head"><h4>Nouvelle facture <small>0042</small></h4><span class="tag wait" id="inv-status">Brouillon</span></div>
+          <div class="inv-meta"><div><span>Client</span><b>Cabinet d'architecture</b></div><div><span>Projet</span><b>Rénovation Architecture</b></div><div><span>Échéance</span><b>04 nov. 2026</b></div></div>
+          <table class="tbl inv">
+            <thead><tr><th>Description</th><th class="r">Qté</th><th class="r">Taux</th><th class="r">Montant</th></tr></thead>
+            <tbody>
+              <tr class="ln"><td>Étude préliminaire</td><td class="r">24 h</td><td class="r">125,00 $</td><td class="r">3 000,00 $</td></tr>
+              <tr class="ln"><td>Plans et devis</td><td class="r">40 h</td><td class="r">125,00 $</td><td class="r">5 000,00 $</td></tr>
+              <tr class="ln"><td>Déplacements</td><td class="r">1</td><td class="r">340,00 $</td><td class="r">340,00 $</td></tr>
+            </tbody>
+          </table>
+          <div class="inv-foot">
+            <div class="sums"><p><span>Sous-total</span><b>8 340,00 $</b></p><p><span>TPS 5 %</span><b>417,00 $</b></p><p><span>TVQ 9,975 %</span><b>831,92 $</b></p><p class="tot"><span>Total</span><b id="inv-total">9 588,92 $</b></p></div>
+            <button class="send" id="inv-send" type="button" tabindex="-1">Envoyer la facture</button>
+          </div>
+        </section>
+
+        <section class="vpanel" role="tabpanel" id="p2" aria-labelledby="tab2" data-nav="Projets" hidden>
+          <div class="app-head"><h4>Projets</h4><span>5 actifs</span></div>
+          <table class="tbl">
+            <thead><tr><th>Projet</th><th>Responsable</th><th>Heures</th><th style="width:30%">Avancement</th></tr></thead>
+            <tbody>
+              <tr><td>Rénovation condo</td><td><span class="av">AC</span>Amélie C.</td><td><span class="hrs" data-to="118" data-of="160">0</span> / 160 h</td><td><div class="bar"><i style="--w:74%"></i></div></td></tr>
+              <tr><td>Décoration intérieure</td><td><span class="av g">FK</span>Frédéric K.</td><td><span class="hrs" data-to="42" data-of="90">0</span> / 90 h</td><td><div class="bar"><i style="--w:47%"></i></div></td></tr>
+              <tr><td>Rénovation chambre</td><td><span class="av a">AC</span>Amélie C.</td><td><span class="hrs" data-to="64" data-of="70">0</span> / 70 h</td><td><div class="bar g"><i style="--w:91%"></i></div></td></tr>
+              <tr><td>Condo 456</td><td><span class="av g">FK</span>Frédéric K.</td><td><span class="hrs" data-to="12" data-of="140">0</span> / 140 h</td><td><div class="bar a"><i style="--w:9%"></i></div></td></tr>
+            </tbody>
+          </table>
+          <div class="board mini">
+            <div class="col"><h5>À faire</h5><div class="note">Recherche de peintres</div></div>
+            <div class="col"><h5>En cours</h5><div class="note d" id="move-note">Premiers dessins</div></div>
+            <div class="col"><h5>Terminée</h5><div class="note g">Rendez-vous client</div></div>
+          </div>
+        </section>
+
+        <section class="vpanel" role="tabpanel" id="p3" aria-labelledby="tab3" data-nav="Comptabilité" hidden>
+          <div class="app-head"><h4>Budget : Rénovation condo</h4><span>Prévu vs réel</span></div>
+          <div class="kpis three">
+            <div class="kpi"><span>Budget</span><b>48 000 $</b></div>
+            <div class="kpi"><span>Facturé à ce jour</span><b id="b-fact" data-to="31200">0 $</b></div>
+            <div class="kpi"><span>Marge réelle</span><b id="b-marge" data-to="29.4">0 %</b><small>prévue 32 %</small></div>
+          </div>
+          <div class="bud">
+            <div class="br"><span>Étude préliminaire</span><div class="pair"><div class="bar"><i style="--w:90%"></i></div><div class="bar g"><i style="--w:84%"></i></div></div></div>
+            <div class="br"><span>Conception</span><div class="pair"><div class="bar"><i style="--w:80%"></i></div><div class="bar g"><i style="--w:86%"></i></div></div></div>
+            <div class="br"><span>Chantier</span><div class="pair"><div class="bar"><i style="--w:100%"></i></div><div class="bar a"><i style="--w:58%"></i></div></div></div>
+            <div class="br"><span>Suivi</span><div class="pair"><div class="bar"><i style="--w:40%"></i></div><div class="bar g"><i style="--w:22%"></i></div></div></div>
+            <p class="legend"><i class="l1"></i>Prévu <i class="l2"></i>Réel</p>
+          </div>
+        </section>
+
+        <section class="vpanel" role="tabpanel" id="p4" aria-labelledby="tab4" data-nav="Temps" hidden>
+          <div class="app-head"><h4>Suivi du temps</h4><span>Semaine du 28 sept.</span></div>
+          <div class="timer"><div><span>Rénovation condo · Plans</span><b id="clock">02:14:07</b></div><button class="send stop" id="timer-btn" type="button" tabindex="-1">Arrêter</button></div>
+          <div class="week">
+            <div class="d"><div class="bw"><i style="--h:62%"></i></div><span>L</span><em>6,5 h</em></div>
+            <div class="d"><div class="bw"><i style="--h:80%"></i></div><span>M</span><em>8 h</em></div>
+            <div class="d"><div class="bw"><i style="--h:70%"></i></div><span>M</span><em>7 h</em></div>
+            <div class="d"><div class="bw"><i style="--h:55%"></i></div><span>J</span><em>5,5 h</em></div>
+            <div class="d now"><div class="bw"><i style="--h:36%"></i></div><span>V</span><em>4,5 h</em></div>
+          </div>
+          <p class="wk-total">Total de la semaine <b>31,5 h</b></p>
+        </section>
+
       </div>
     </div>
     <span class="cursor" id="cursor" aria-hidden="true"></span>
   </div>
-  <div class="toast" id="toast" aria-hidden="true"><i></i><span><b>Facture payée</b>Cabinet d'architecture · 8 912,50 $</span></div>
-  <figure class="photo chip-photo" aria-hidden="true"><img src="assets/photos/hero-expert.jpg" alt="" loading="eager" onerror="this.parentNode.classList.add('missing')"><span class="slot-label">Photo : expert en démo</span><span class="live"><i></i>En direct</span></figure>
+  <div class="toast" id="toast" aria-hidden="true"><i></i><span><b id="toast-t">Facture payée</b><em id="toast-d">Cabinet d'architecture · 8 912,50 $</em></span></div>
   </div>
+</div>
 </div></section>
 
 <section class="press"><div class="container">
@@ -164,7 +235,7 @@
     <ul class="checks"><li>Un de nos experts vous contactera afin d'évaluer vos besoins</li><li>Vous bénéficierez d'une démonstration complète et personnalisée par visioconférence</li><li>Vous pourrez poser toutes vos questions concernant l'ERP Kiwili à notre expert en gestion</li></ul>
     <a class="btn btn-primary" href="#">Prenons rendez-vous</a>
   </div>
-  <figure class="photo demo-photo reveal"><img src="assets/photos/demo-expert.jpg" alt="Un expert Kiwili anime une démonstration par visioconférence" loading="lazy" onerror="this.parentNode.classList.add('missing')"><span class="slot-label">Photo : homme qui anime une démo virtuelle</span>
+  <figure class="photo demo-photo reveal"><img src="assets/photos/demo-expert.jpg" alt="Un expert Kiwili anime une démonstration par visioconférence" onerror="this.parentNode.classList.add('missing')"><span class="slot-label">Photo : homme qui anime une démo virtuelle</span>
       <div class="callbar"><span class="rec"><i></i>Démo Kiwili · 32:10</span><span class="btns"><i></i><i></i><i class="end"></i></span></div></figure>
 </div></section>
 
@@ -172,7 +243,7 @@
   <h2>Bénéficiez d'un essai de 14 jours</h2>
   <p class="lead">Rejoignez nos 150 000 clients et simplifiez la gestion de votre entreprise dès aujourd'hui. Votre essai sans engagement de Kiwili inclut l'ensemble de nos fonctionnalités.</p>
   <a class="btn btn-accent" href="#">Commencer</a>
-</div><figure class="photo trial-photo"><img src="assets/photos/workspace.jpg" alt="Une gestionnaire devant son ordinateur" loading="lazy" onerror="this.parentNode.classList.add('missing')"><span class="slot-label">Photo : personne devant son ordinateur</span></figure></div></div></section>
+</div><figure class="photo trial-photo"><img src="assets/photos/workspace.jpg" alt="Une gestionnaire devant son ordinateur" onerror="this.parentNode.classList.add('missing')"><span class="slot-label">Photo : personne devant son ordinateur</span></figure></div></div></section>
 </main>
 
 <footer class="foot"><div class="container">

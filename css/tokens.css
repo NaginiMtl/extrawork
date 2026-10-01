@@ -4,21 +4,24 @@
 :root {
   color-scheme: dark;
   /* Surfaces (dark, Linear-inspired) */
-  --bg: #08090d;
-  --bg-raised: #0e1016;
-  --bg-elevated: #14161e;
+  --bg: #070b14;
+  --bg-raised: #0c1220;
+  --bg-elevated: #111a2c;
   --line: rgba(255, 255, 255, 0.08);
   --line-strong: rgba(255, 255, 255, 0.16);
   --fill-0: rgba(255, 255, 255, 0.02);
   --fill-1: rgba(255, 255, 255, 0.03);
   --fill-2: rgba(255, 255, 255, 0.06);
   --fill-3: rgba(255, 255, 255, 0.08);
-  --nav-bg: rgba(8, 9, 13, 0.72);
+  --nav-bg: rgba(7, 11, 20, 0.72);
   --primary-hover: #fff;
-  --tile-a: #1c2036;
-  --tile-b: #12141d;
+  --tile-a: #123256;
+  --tile-b: #0c1220;
   --shadow-ink: rgba(0, 0, 0, 0.8);
-  --hero-glow: rgba(91, 124, 255, 0.16);
+  --hero-glow: rgba(42, 167, 255, 0.2);
+  --c-blue: #3db2ff;
+  --c-green: #7ad03c;
+  --c-orange: #ff9a1f;
   --d-dark: block;
   --d-light: none;
 
@@ -28,11 +31,11 @@
   --text-faint: #646a7a;
 
   /* Brand */
-  --accent: #5b7cff;
-  --accent-strong: #7b96ff;
-  --accent-soft: rgba(91, 124, 255, 0.14);
-  --kiwi: #b6f04b;        /* secondary: the "kiwi" green */
-  --amber: #ffb547;
+  --accent: #0f80db;
+  --accent-strong: #5cc0ff;
+  --accent-soft: rgba(42, 167, 255, 0.14);
+  --kiwi: #7ad03c;        /* secondary: the "kiwi" green */
+  --amber: #ff9a1f;
   --danger: #ff6b6b;
 
   /* Type */
@@ -51,13 +54,13 @@
   --s-6: 32px; --s-7: 48px; --s-8: 72px; --s-9: 112px;
   --r-sm: 8px; --r-md: 12px; --r-lg: 20px; --r-pill: 999px;
   --container: 1160px;
-  --shadow-glow: 0 0 0 1px var(--line), 0 30px 80px -20px rgba(91, 124, 255, 0.35);
+  --shadow-glow: 0 0 0 1px var(--line), 0 30px 80px -20px rgba(42, 167, 255, 0.3);
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
-  --bg: #f7f8fa;
+  --bg: #f5f9fd;
   --bg-raised: #ffffff;
   --bg-elevated: #ffffff;
   --line: rgba(15, 20, 40, 0.1);
@@ -66,29 +69,32 @@
   --fill-1: rgba(15, 20, 40, 0.03);
   --fill-2: rgba(15, 20, 40, 0.06);
   --fill-3: rgba(15, 20, 40, 0.08);
-  --nav-bg: rgba(247, 248, 250, 0.78);
+  --nav-bg: rgba(245, 249, 253, 0.8);
   --text: #0d0f17;
   --text-muted: #4d5366;
   --text-faint: #7b8195;
-  --accent: #3f62f0;
-  --accent-strong: #3453d6;
-  --accent-soft: rgba(63, 98, 240, 0.1);
-  --kiwi: #4b9209;
-  --amber: #b86e00;
+  --accent: #0b73c9;
+  --accent-strong: #0a63ad;
+  --accent-soft: rgba(11, 115, 201, 0.1);
+  --kiwi: #3f8f0f;
+  --amber: #c26a00;
   --danger: #d03a45;
   --primary-hover: #262a3a;
-  --tile-a: #dfe5ff;
+  --tile-a: #d4ebff;
   --tile-b: #eef0f6;
   --shadow-ink: rgba(20, 28, 60, 0.28);
-  --hero-glow: rgba(63, 98, 240, 0.12);
-  --shadow-glow: 0 0 0 1px var(--line), 0 30px 80px -24px rgba(63, 98, 240, 0.28);
+  --hero-glow: rgba(11, 115, 201, 0.14);
+  --shadow-glow: 0 0 0 1px var(--line), 0 30px 80px -24px rgba(11, 115, 201, 0.26);
+  --c-blue: #0b73c9;
+  --c-green: #3f8f0f;
+  --c-orange: #c26a00;
   --d-dark: none;
   --d-light: block;
   color-scheme: light;
   }
 }
 :root[data-theme="light"] {
-  --bg: #f7f8fa;
+  --bg: #f5f9fd;
   --bg-raised: #ffffff;
   --bg-elevated: #ffffff;
   --line: rgba(15, 20, 40, 0.1);
@@ -97,22 +103,25 @@
   --fill-1: rgba(15, 20, 40, 0.03);
   --fill-2: rgba(15, 20, 40, 0.06);
   --fill-3: rgba(15, 20, 40, 0.08);
-  --nav-bg: rgba(247, 248, 250, 0.78);
+  --nav-bg: rgba(245, 249, 253, 0.8);
   --text: #0d0f17;
   --text-muted: #4d5366;
   --text-faint: #7b8195;
-  --accent: #3f62f0;
-  --accent-strong: #3453d6;
-  --accent-soft: rgba(63, 98, 240, 0.1);
-  --kiwi: #4b9209;
-  --amber: #b86e00;
+  --accent: #0b73c9;
+  --accent-strong: #0a63ad;
+  --accent-soft: rgba(11, 115, 201, 0.1);
+  --kiwi: #3f8f0f;
+  --amber: #c26a00;
   --danger: #d03a45;
   --primary-hover: #262a3a;
-  --tile-a: #dfe5ff;
+  --tile-a: #d4ebff;
   --tile-b: #eef0f6;
   --shadow-ink: rgba(20, 28, 60, 0.28);
-  --hero-glow: rgba(63, 98, 240, 0.12);
-  --shadow-glow: 0 0 0 1px var(--line), 0 30px 80px -24px rgba(63, 98, 240, 0.28);
+  --hero-glow: rgba(11, 115, 201, 0.14);
+  --shadow-glow: 0 0 0 1px var(--line), 0 30px 80px -24px rgba(11, 115, 201, 0.26);
+  --c-blue: #0b73c9;
+  --c-green: #3f8f0f;
+  --c-orange: #c26a00;
   --d-dark: none;
   --d-light: block;
   color-scheme: light;

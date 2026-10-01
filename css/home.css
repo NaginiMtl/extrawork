@@ -312,3 +312,27 @@ tr.flash td{animation:flash 1.4s ease-out}
 .viewer .shot{height:490px}
 .mod{justify-content:flex-start;gap:var(--s-6)}
 .blobs .b2{opacity:.13}
+
+/* hero note replaces the pill */
+.hero-note{margin-top:var(--s-4)}
+
+/* trial: text only */
+.trial-card{grid-template-columns:1fr;justify-items:center;text-align:center}
+.trial-copy{max-width:640px}
+.trial .lead{margin-inline:auto}
+
+/* Centralisation diagram */
+.hubpanel{padding:var(--s-4)}
+.hubsvg{width:100%;height:auto;display:block;overflow:visible}
+.hubsvg text{font:500 13.5px var(--font-text);fill:var(--text)}
+.hubsvg .wire{stroke:color-mix(in srgb,var(--c) 55%,transparent);stroke-width:1.5;stroke-dasharray:3 7;stroke-linecap:round;fill:none;animation:flow 1.6s linear infinite;animation-delay:var(--d)}
+@keyframes flow{to{stroke-dashoffset:-20}}
+.hubsvg .node rect{fill:var(--bg-elevated);stroke:var(--line-strong);stroke-width:1;animation:nodeglow 7.2s ease-in-out infinite;animation-delay:calc(var(--i) * 1.2s)}
+.hubsvg .node .ic{fill:none;stroke:var(--c);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+@keyframes nodeglow{0%,14%,100%{stroke:var(--line-strong);fill:var(--bg-elevated)}6%{stroke:var(--c);fill:color-mix(in srgb,var(--c) 14%,var(--bg-elevated))}}
+.hubsvg .core circle{fill:var(--bg-elevated);stroke:var(--line-strong);stroke-width:1}
+.hubsvg .core{color:var(--text)}
+.hubsvg .ring{fill:none;stroke:var(--c-blue);stroke-width:1;opacity:0;transform-box:fill-box;transform-origin:center;animation:ping 3.6s ease-out infinite}
+.hubsvg .ring.r2{animation-delay:1.8s}
+@keyframes ping{0%{opacity:.5;transform:scale(1)}100%{opacity:0;transform:scale(1.9)}}
+@media (prefers-reduced-motion:reduce){.hubsvg *{animation:none!important}}

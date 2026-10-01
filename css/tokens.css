@@ -2,6 +2,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400..600&display=swap");
 
 :root {
+  color-scheme: dark;
   /* Surfaces (dark, Linear-inspired) */
   --bg: #08090d;
   --bg-raised: #0e1016;

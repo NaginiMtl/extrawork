@@ -232,3 +232,35 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
     err.hidden = true; done.hidden = false; // TODO: POST to the CRM / form endpoint
   });
 })();
+
+// ===== Voice player =====
+(() => {
+  const a = document.getElementById("vaudio"), btn = document.getElementById("vplay"), wave = document.getElementById("vwave"), time = document.getElementById("vtime");
+  if (!a || !btn) return;
+  const bars = [...wave.children]; bars.forEach((b, i) => b.style.setProperty("--n", i % 12));
+  const fmt = (s) => Math.floor(s / 60) + ":" + String(Math.floor(s % 60)).padStart(2, "0");
+  const dur = () => (isFinite(a.duration) && a.duration) || 16;
+  const paint = () => {
+    const p = a.currentTime / dur(), n = Math.round(p * bars.length);
+    bars.forEach((b, i) => b.classList.toggle("on", i < n));
+    time.textContent = a.paused && a.currentTime === 0 ? fmt(dur()) : fmt(a.currentTime);
+    wave.setAttribute("aria-valuenow", Math.round(a.currentTime)); wave.setAttribute("aria-valuemax", Math.round(dur()));
+    wave.setAttribute("aria-valuetext", Math.round(a.currentTime) + " secondes sur " + Math.round(dur()));
+  };
+  const set = (on) => { btn.classList.toggle("on", on); btn.setAttribute("aria-label", on ? "Mettre l'audio en pause" : "Écouter la présentation de Kiwili (" + Math.round(dur()) + " secondes)"); };
+  btn.addEventListener("click", () => { if (a.paused) a.play().catch(() => set(false)); else a.pause(); });
+  a.addEventListener("play", () => set(true)); a.addEventListener("pause", () => set(false));
+  a.addEventListener("ended", () => { a.currentTime = 0; set(false); paint(); });
+  a.addEventListener("timeupdate", paint); a.addEventListener("loadedmetadata", paint);
+  const seek = (e) => { const r = wave.getBoundingClientRect(); a.currentTime = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) * dur(); paint(); };
+  wave.addEventListener("click", seek);
+  wave.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") a.currentTime = Math.min(dur(), a.currentTime + 2);
+    else if (e.key === "ArrowLeft") a.currentTime = Math.max(0, a.currentTime - 2);
+    else if (e.key === " " || e.key === "Enter") { e.preventDefault(); btn.click(); } else return;
+    e.preventDefault(); paint();
+  });
+  const wrap = document.getElementById("voice");
+  if (wrap) new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { wrap.classList.add("in"); o.disconnect(); } }, { threshold: 0.4 }).observe(wrap);
+  paint();
+})();

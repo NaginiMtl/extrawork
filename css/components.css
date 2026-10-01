@@ -11,16 +11,16 @@ p{margin:0}
 /* Buttons */
 .btn{display:inline-flex;align-items:center;gap:var(--s-2);height:44px;padding:0 var(--s-5);border-radius:var(--r-pill);font:500 0.9375rem var(--font-text);border:1px solid transparent;cursor:pointer;transition:transform .2s var(--ease),background .2s,border-color .2s}
 .btn:hover{transform:translateY(-1px)}
-.btn-primary{background:var(--text);color:#0a0b10}
-.btn-primary:hover{background:#fff}
+.btn-primary{background:var(--text);color:var(--bg)}
+.btn-primary:hover{background:var(--primary-hover)}
 .btn-accent{background:var(--accent);color:#fff;box-shadow:0 8px 30px -8px rgba(91,124,255,.7)}
 .btn-accent:hover{background:var(--accent-strong)}
 .btn-ghost{border-color:var(--line-strong);color:var(--text)}
-.btn-ghost:hover{background:rgba(255,255,255,.06)}
+.btn-ghost:hover{background:var(--fill-2)}
 .btn-sm{height:36px;padding:0 var(--s-4);font-size:.875rem}
 
 /* Badges / chips */
-.chip{display:inline-flex;align-items:center;gap:var(--s-2);padding:6px 12px;border:1px solid var(--line-strong);border-radius:var(--r-pill);font-size:.8125rem;color:var(--text-muted);background:rgba(255,255,255,.03)}
+.chip{display:inline-flex;align-items:center;gap:var(--s-2);padding:6px 12px;border:1px solid var(--line-strong);border-radius:var(--r-pill);font-size:.8125rem;color:var(--text-muted);background:var(--fill-1)}
 .chip i{width:6px;height:6px;border-radius:50%;background:var(--kiwi);box-shadow:0 0 10px var(--kiwi)}
 .eyebrow{font:500 .8125rem var(--font-text);letter-spacing:.08em;text-transform:uppercase;color:var(--accent-strong)}
 
@@ -38,6 +38,7 @@ p{margin:0}
 /* Logo */
 .logo{display:inline-flex;align-items:center;gap:6px;font:700 1.6rem var(--font-display);letter-spacing:-0.04em}
 .logo svg{height:28px;width:auto}
+.logo .l-dark{display:var(--d-dark)}.logo .l-light{display:var(--d-light)}
 
 /* Reveal */
 .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s var(--ease),transform .7s var(--ease)}

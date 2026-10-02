@@ -772,3 +772,15 @@ dialog .btn{justify-content:center}
   .metier:not(.on) .m-text{left:50%;right:auto;transform:translateX(-50%)}
   .metier:not(.on) .m-text b{writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;font-size:1.25rem}
 }
+
+/* ===== polish round: métiers pacing, equal prompts, aligned integration links ===== */
+.metier-row li{transition:flex-grow 1.15s var(--ease)}
+.metier img{transition:transform 1.5s var(--ease)}
+.metier::after{transition:background .9s}
+.m-text small{transition:max-height .9s var(--ease),opacity .6s,margin .6s}
+.metier.on .m-text small{transition-delay:.35s}
+.prompts{grid-auto-rows:1fr}
+.prompt{display:flex;align-items:center;min-height:4.4rem}
+.integ-col{display:flex;flex-direction:column}
+.integ-col .fine{margin-bottom:var(--s-5)}
+.integ-col>.textlink{margin-top:auto;align-self:flex-start}

@@ -264,3 +264,52 @@ document.getElementById("theme-toggle")?.addEventListener("click", () => {
   if (wrap) new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { wrap.classList.add("in"); o.disconnect(); } }, { threshold: 0.4 }).observe(wrap);
   paint();
 })();
+
+// ===== Claude section: example conversations =====
+(() => {
+  const body = document.getElementById("chat-body"); if (!body) return;
+  const prompts = [...document.querySelectorAll(".prompt")];
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const rows = (r) => r.map((x) => `<tr><td>${x[0]}</td><td class="late">${x[1]}</td><td class="r">${x[2]}</td></tr>`).join("");
+  const confirm = (title, lines, ok, done, cancel) => `<div class="confirm"><h4>${title}</h4><dl>${lines.map((l) => `<dt>${l[0]}</dt><dd>${l[1]}</dd>`).join("")}</dl><div class="row"><button class="cbtn ok" type="button" data-done="${done}">${ok}</button><button class="cbtn" type="button" data-cancel="${cancel}">Annuler</button></div></div>`;
+  const scenes = [
+    { user: prompts[0]?.textContent.trim(), tool: "Kiwili · factures",
+      bot: `<p>Trois factures sont en retard, pour un total de <b>8 355,50 $</b> :</p><table class="rtable"><thead><tr><th>Client</th><th>Retard</th><th class="r">Montant</th></tr></thead><tbody>${rows([["Construction Tremblay", "47 jours", "4 280,00 $"], ["Rénovation Laval", "33 jours", "2 915,50 $"], ["ACME Inc.", "12 jours", "1 160,00 $"]])}</tbody></table><p>Voulez-vous que je rédige une relance pour les factures de plus de 30 jours ?</p>` },
+    { user: prompts[1]?.textContent.trim(), tool: "Kiwili · heures et factures",
+      bot: `<p>Sur le projet Rénovation Laval, <b>42,5 h</b> ne sont pas encore facturées. Voici la facture que je propose :</p>` + confirm("Nouvelle facture · Rénovation Laval", [["42,5 h × 125,00 $", "5 312,50 $"], ["TPS 5 %", "265,63 $"], ["TVQ 9,975 %", "529,92 $"], ["Total", "6 108,05 $"]], "Créer la facture", "Facture 0043 créée dans Kiwili.", "Rien n'a été créé.") },
+    { user: prompts[2]?.textContent.trim(), tool: "Kiwili · feuilles de temps",
+      bot: `<p>Je m'apprête à inscrire cette entrée de temps :</p>` + confirm("Nouvelle entrée de temps", [["Projet", "Agrandissement Dupuis"], ["Tâche", "Plans préliminaires"], ["Date", "Hier"], ["Durée", "3 h"]], "Inscrire les heures", "3 h inscrites sur Plans préliminaires.", "Rien n'a été inscrit.") },
+  ];
+  let token = 0;
+  const wire = (el) => {
+    el.querySelectorAll("[data-done]").forEach((b) => b.addEventListener("click", () => { b.closest(".confirm").outerHTML = `<div class="ok-msg">✓ ${b.dataset.done}</div>`; }));
+    el.querySelectorAll("[data-cancel]").forEach((b) => b.addEventListener("click", () => { b.closest(".confirm").outerHTML = `<p>${b.dataset.cancel}</p>`; }));
+  };
+  const play = async (i) => {
+    const tk = ++token, s = scenes[i];
+    prompts.forEach((p, k) => { p.classList.toggle("on", k === i); p.setAttribute("aria-selected", k === i); });
+    body.innerHTML = "";
+    const u = document.createElement("div"); u.className = "msg user"; body.appendChild(u);
+    if (reduce) u.textContent = s.user; else { for (let c = 1; c <= s.user.length; c++) { if (tk !== token) return; u.textContent = s.user.slice(0, c); await sleep(16); } await sleep(350); }
+    if (tk !== token) return;
+    const b = document.createElement("div"); b.className = "msg bot";
+    b.innerHTML = `<span class="tool${reduce ? " done" : ""}"><i></i>${s.tool}</span>` + (reduce ? s.bot : `<div class="dots"><i></i><i></i><i></i></div>`);
+    body.appendChild(b);
+    if (reduce) { wire(b); return; }
+    await sleep(1100); if (tk !== token) return;
+    b.innerHTML = `<span class="tool done"><i></i>${s.tool}</span>` + s.bot; wire(b);
+  };
+  prompts.forEach((p, i) => p.addEventListener("click", () => play(i)));
+  let started = false;
+  new IntersectionObserver((es, o) => { if (es[0].isIntersecting && !started) { started = true; play(0); o.disconnect(); } }, { threshold: 0.3 }).observe(body);
+  if (reduce) play(0);
+})();
+
+// ===== Copy buttons =====
+document.querySelectorAll("[data-copy]").forEach((btn) => btn.addEventListener("click", async () => {
+  const el = document.getElementById(btn.dataset.copy); if (!el) return;
+  const done = () => { const t = btn.textContent; btn.textContent = "Copié"; setTimeout(() => (btn.textContent = t), 1600); };
+  try { await navigator.clipboard.writeText(el.textContent.trim()); done(); }
+  catch (e) { const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+}));

@@ -313,3 +313,102 @@ document.querySelectorAll("[data-copy]").forEach((btn) => btn.addEventListener("
   try { await navigator.clipboard.writeText(el.textContent.trim()); done(); }
   catch (e) { const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
 }));
+
+
+// ===== Story: one document, from quote to accounting (scroll-driven) =====
+(() => {
+  const story = document.getElementById("story"); if (!story) return;
+  const btns = [...story.querySelectorAll(".sbtn")], faces = [...story.querySelectorAll(".doc-face")];
+  const type = document.getElementById("doc-type"), num = document.getElementById("doc-num"), state = document.getElementById("doc-state"), fill = document.getElementById("doc-fill");
+  const meta = [["Devis", "N° 0041", "ok", "Accepté"], ["Bon de commande", "N° 0017", "sent", "Envoyé"], ["Projet", "Rénovation Laval", "ok", "Terminé"], ["Facture", "N° 0042", "sent", "Envoyée"], ["Écritures", "Facture 0042", "ok", "Équilibré"]];
+  let cur = -1;
+  const show = (i) => {
+    if (i === cur) return;
+    faces.forEach((f, k) => { f.classList.toggle("on", k === i); f.classList.toggle("out", k < i); });
+    btns.forEach((b, k) => { b.classList.toggle("on", k === i); b.setAttribute("aria-selected", k === i); });
+    const m = meta[i]; type.textContent = m[0]; num.textContent = m[1]; state.className = "tag " + m[2]; state.textContent = m[3];
+    fill.style.width = ((i + 1) / faces.length) * 100 + "%"; cur = i;
+  };
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)"), narrow = matchMedia("(max-width: 900px)");
+  const staticMode = () => reduce.matches || narrow.matches || innerHeight < 700;
+  const apply = () => { story.classList.toggle("static", staticMode()); };
+  apply(); reduce.addEventListener("change", apply); narrow.addEventListener("change", apply);
+  const onScroll = () => {
+    if (staticMode()) return;
+    const r = story.getBoundingClientRect(), total = r.height - innerHeight; if (total <= 0) return;
+    const p = Math.min(0.9999, Math.max(0, -r.top / total));
+    show(Math.floor(p * faces.length));
+  };
+  let ticking = false;
+  addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; onScroll(); }); } }, { passive: true });
+  addEventListener("resize", () => { apply(); onScroll(); });
+  btns.forEach((b, i) => b.addEventListener("click", () => {
+    if (staticMode()) { show(i); return; }
+    const top = story.getBoundingClientRect().top + scrollY, total = story.offsetHeight - innerHeight;
+    scrollTo({ top: top + total * ((i + 0.5) / faces.length), behavior: "smooth" });
+  }));
+  show(0); onScroll();
+})();
+
+// ===== Headline reveal, line by line =====
+(() => {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const heads = [...document.querySelectorAll(".hero h1, .sec-head h2, .ai-head h2, .faq h2, .demo h2, .integ h2, .trial h2, .flow h2")];
+  if (!heads.length) return;
+  document.documentElement.classList.add("js-split");
+  let n = 0;
+  const split = (node) => {
+    [...node.childNodes].forEach((c) => {
+      if (c.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        c.textContent.split(/(\s+)/).forEach((t) => {
+          if (!t) return;
+          if (/^\s+$/.test(t)) { frag.appendChild(document.createTextNode(t)); return; }
+          const w = document.createElement("span"); w.className = "w"; w.setAttribute("aria-hidden", "true");
+          const s = document.createElement("span"); s.textContent = t; s.style.setProperty("--i", n++); w.appendChild(s); frag.appendChild(w);
+        });
+        c.replaceWith(frag);
+      } else if (c.nodeType === 1) split(c);
+    });
+  };
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("split-in"); io.unobserve(e.target); } }), { threshold: 0.3 });
+  heads.forEach((h) => { n = 0; h.setAttribute("aria-label", h.textContent.trim().replace(/\s+/g, " ")); split(h); h.classList.contains("rise") ? 0 : 0; io.observe(h); });
+})();
+
+// ===== Counters =====
+(() => {
+  const els = [...document.querySelectorAll("[data-count]")]; if (!els.length) return;
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const fmt = (n, d) => new Intl.NumberFormat("fr-CA", { minimumFractionDigits: d, maximumFractionDigits: d }).format(n);
+  const run = (el) => {
+    const to = +el.dataset.count, d = +(el.dataset.dec || 0), t0 = performance.now(), ms = 1400;
+    const step = (t) => { const p = Math.min((t - t0) / ms, 1), e = 1 - Math.pow(1 - p, 3); el.textContent = fmt(to * e, d); if (p < 1) requestAnimationFrame(step); else el.textContent = fmt(to, d); };
+    requestAnimationFrame(step);
+  };
+  if (reduce) return;
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { run(e.target); io.unobserve(e.target); } }), { threshold: 0.6 });
+  els.forEach((el) => { el.textContent = fmt(0, +(el.dataset.dec || 0)); io.observe(el); });
+})();
+
+// ===== Packets: off when motion is reduced =====
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) document.querySelectorAll(".packet").forEach((p) => p.remove());
+
+// ===== FAQ: smooth open and close =====
+(() => {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  document.querySelectorAll(".faq-list details").forEach((d) => {
+    const s = d.querySelector("summary"); let anim = null;
+    s.addEventListener("click", (e) => {
+      e.preventDefault();
+      const closed = s.offsetHeight, opening = !d.open;
+      if (anim) anim.cancel();
+      if (opening) d.open = true;
+      const open = opening ? d.scrollHeight : closed;
+      const from = opening ? closed : d.offsetHeight;
+      d.style.overflow = "hidden";
+      anim = d.animate({ height: [from + "px", (opening ? open : closed) + "px"] }, { duration: 380, easing: "cubic-bezier(.2,.7,.2,1)" });
+      anim.onfinish = () => { if (!opening) d.open = false; d.style.height = d.style.overflow = ""; anim = null; };
+      anim.oncancel = () => { d.style.height = d.style.overflow = ""; };
+    });
+  });
+})();

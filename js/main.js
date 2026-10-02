@@ -412,3 +412,15 @@ if (matchMedia("(prefers-reduced-motion: reduce)").matches) document.querySelect
     });
   });
 })();
+
+// ===== Métiers: expanding cards =====
+(() => {
+  const cards = [...document.querySelectorAll(".metier")]; if (!cards.length) return;
+  const set = (c) => cards.forEach((k) => { const on = k === c; k.classList.toggle("on", on); k.setAttribute("aria-expanded", on); });
+  const hover = matchMedia("(hover: hover) and (min-width: 861px)");
+  cards.forEach((c) => {
+    c.addEventListener("click", () => set(c));
+    c.addEventListener("focus", () => set(c));
+    c.addEventListener("pointerenter", () => { if (hover.matches) set(c); });
+  });
+})();

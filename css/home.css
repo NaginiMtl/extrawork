@@ -528,3 +528,25 @@ dialog .btn{justify-content:center}
 .flow-head>*{min-width:0}
 @media(max-width:900px){.flow-head{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:480px){.voice{gap:var(--s-3);padding-right:var(--s-4)}.vwave{gap:1px}.vwave i{min-width:1px}.vplay{width:46px;height:46px}}
+
+/* ===== Voice player lives in the hero, top right ===== */
+.hero .container{position:relative}
+.hero .voice-wrap{position:absolute;right:0;top:140px;width:min(400px,36%);z-index:2}
+.hand-note{left:-103px;top:-110px}
+.handarrow{left:-81px;top:-88px;width:150px;height:110px;transform:none}
+@media(max-width:1240px){
+  .hero .hero-copy{order:1}.hero .voice-wrap{order:2}.hero .viewer{order:3}
+  .hero .voice-wrap{position:relative;right:auto;top:auto;width:min(400px,100%);margin:var(--s-8) 0 0}
+  .hand-note{left:calc(var(--s-4) + 66px);top:-66px}
+  .handarrow{left:var(--s-4);top:-66px;width:76px;height:56px;transform:rotate(38deg);transform-origin:0 0}
+}
+.hero .container{display:flex;flex-direction:column}
+@media(min-width:1241px){.hero .container{display:block}}
+.hero h1{max-width:9em}
+
+/* ===== Closing bands: dark in both themes ===== */
+.trial.on-dark{background:var(--bg);color:var(--text);padding:var(--s-9) 0;border-top:1px solid var(--line)}
+.trial-card.on-dark{background:none;border:0;border-radius:0;padding:0;overflow:visible}
+.foot.on-dark{background:var(--bg);color:var(--text-muted);border-top:1px solid var(--line)}
+.foot.on-dark a:hover{color:var(--text)}
+@media(max-width:900px){.trial-card.on-dark{padding:0}}

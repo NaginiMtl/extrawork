@@ -27,6 +27,21 @@
 
 <main id="main">
 <section class="hero"><div class="hero-grid" aria-hidden="true"></div><div class="container">
+  <div class="voice-wrap" id="voice">
+    <span class="hand-note" aria-hidden="true">Écoutez-nous</span>
+    <svg class="handarrow" viewBox="0 0 150 110" aria-hidden="true" focusable="false">
+  <path class="ha a1" pathLength="1" d="M6 14 C 34 4, 78 6, 104 34 C 118 49, 122 68, 119 88"/>
+  <path class="ha a2" pathLength="1" d="M9 18 C 38 10, 80 14, 102 38 C 114 52, 118 70, 116 86"/>
+  <path class="ha a3" pathLength="1" d="M119 90 C 112 80, 106 74, 100 68"/>
+  <path class="ha a4" pathLength="1" d="M119 90 C 124 80, 131 73, 139 68"/>
+</svg>
+    <div class="voice">
+      <button class="vplay" id="vplay" type="button" aria-label="Écouter la présentation de Kiwili (16 secondes)"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-play" d="M8 5.5v13l11-6.5z"/><path class="i-pause" d="M8 5v14M16 5v14"/></svg></button>
+      <div class="vwave" id="vwave" role="slider" tabindex="0" aria-label="Position dans l'extrait audio" aria-valuemin="0" aria-valuemax="16" aria-valuenow="0" aria-valuetext="0 seconde"><i style="--h:80%"></i><i style="--h:72%"></i><i style="--h:35%"></i><i style="--h:100%"></i><i style="--h:96%"></i><i style="--h:94%"></i><i style="--h:59%"></i><i style="--h:82%"></i><i style="--h:73%"></i><i style="--h:83%"></i><i style="--h:79%"></i><i style="--h:87%"></i><i style="--h:66%"></i><i style="--h:73%"></i><i style="--h:80%"></i><i style="--h:73%"></i><i style="--h:36%"></i><i style="--h:51%"></i><i style="--h:87%"></i><i style="--h:69%"></i><i style="--h:33%"></i><i style="--h:40%"></i><i style="--h:56%"></i><i style="--h:89%"></i><i style="--h:33%"></i><i style="--h:62%"></i><i style="--h:80%"></i><i style="--h:72%"></i><i style="--h:48%"></i><i style="--h:55%"></i><i style="--h:10%"></i><i style="--h:10%"></i><i style="--h:75%"></i><i style="--h:91%"></i><i style="--h:91%"></i><i style="--h:86%"></i><i style="--h:76%"></i><i style="--h:87%"></i><i style="--h:67%"></i><i style="--h:76%"></i><i style="--h:86%"></i><i style="--h:89%"></i><i style="--h:41%"></i><i style="--h:15%"></i><i style="--h:59%"></i><i style="--h:83%"></i><i style="--h:96%"></i><i style="--h:92%"></i><i style="--h:82%"></i><i style="--h:64%"></i><i style="--h:84%"></i><i style="--h:75%"></i><i style="--h:88%"></i><i style="--h:56%"></i><i style="--h:25%"></i><i style="--h:10%"></i></div>
+      <span class="vtime" id="vtime">0:16</span>
+      <audio id="vaudio" preload="none" src="assets/audio/presentation-kiwili.mp3"></audio>
+    </div>
+  </div>
   <div class="hero-copy rise">
     <h1>Gérez votre entreprise sur une <em>seule</em> plateforme</h1>
     <p class="lead">De la comptabilité à la gestion de projets, l'ERP Kiwili, votre logiciel de gestion québécois, simplifie vos opérations où que vous soyez.</p>
@@ -156,22 +171,7 @@
 </div></section>
 
 <section class="sec flow" id="parcours"><div class="container">
-  <div class="flow-head"><div class="sec-head reveal"><span class="eyebrow">Un seul logiciel</span><h2>Du devis à la comptabilité, sans changer d'outil</h2><p class="lead">Chaque étape alimente la suivante. Rien à ressaisir.</p></div>
-  <div class="voice-wrap" id="voice">
-    <span class="hand-note" aria-hidden="true">Écoutez-nous</span>
-    <svg class="handarrow" viewBox="0 0 150 110" aria-hidden="true" focusable="false">
-  <path class="ha a1" pathLength="1" d="M6 14 C 34 4, 78 6, 104 34 C 118 49, 122 68, 119 88"/>
-  <path class="ha a2" pathLength="1" d="M9 18 C 38 10, 80 14, 102 38 C 114 52, 118 70, 116 86"/>
-  <path class="ha a3" pathLength="1" d="M119 90 C 112 80, 106 74, 100 68"/>
-  <path class="ha a4" pathLength="1" d="M119 90 C 124 80, 131 73, 139 68"/>
-</svg>
-    <div class="voice">
-      <button class="vplay" id="vplay" type="button" aria-label="Écouter la présentation de Kiwili (16 secondes)"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-play" d="M8 5.5v13l11-6.5z"/><path class="i-pause" d="M8 5v14M16 5v14"/></svg></button>
-      <div class="vwave" id="vwave" role="slider" tabindex="0" aria-label="Position dans l'extrait audio" aria-valuemin="0" aria-valuemax="16" aria-valuenow="0" aria-valuetext="0 seconde"><i style="--h:80%"></i><i style="--h:72%"></i><i style="--h:35%"></i><i style="--h:100%"></i><i style="--h:96%"></i><i style="--h:94%"></i><i style="--h:59%"></i><i style="--h:82%"></i><i style="--h:73%"></i><i style="--h:83%"></i><i style="--h:79%"></i><i style="--h:87%"></i><i style="--h:66%"></i><i style="--h:73%"></i><i style="--h:80%"></i><i style="--h:73%"></i><i style="--h:36%"></i><i style="--h:51%"></i><i style="--h:87%"></i><i style="--h:69%"></i><i style="--h:33%"></i><i style="--h:40%"></i><i style="--h:56%"></i><i style="--h:89%"></i><i style="--h:33%"></i><i style="--h:62%"></i><i style="--h:80%"></i><i style="--h:72%"></i><i style="--h:48%"></i><i style="--h:55%"></i><i style="--h:10%"></i><i style="--h:10%"></i><i style="--h:75%"></i><i style="--h:91%"></i><i style="--h:91%"></i><i style="--h:86%"></i><i style="--h:76%"></i><i style="--h:87%"></i><i style="--h:67%"></i><i style="--h:76%"></i><i style="--h:86%"></i><i style="--h:89%"></i><i style="--h:41%"></i><i style="--h:15%"></i><i style="--h:59%"></i><i style="--h:83%"></i><i style="--h:96%"></i><i style="--h:92%"></i><i style="--h:82%"></i><i style="--h:64%"></i><i style="--h:84%"></i><i style="--h:75%"></i><i style="--h:88%"></i><i style="--h:56%"></i><i style="--h:25%"></i><i style="--h:10%"></i></div>
-      <span class="vtime" id="vtime">0:16</span>
-      <audio id="vaudio" preload="none" src="assets/audio/presentation-kiwili.mp3"></audio>
-    </div>
-  </div></div>
+  <div class="sec-head reveal"><span class="eyebrow">Un seul logiciel</span><h2>Du devis à la comptabilité, sans changer d'outil</h2><p class="lead">Chaque étape alimente la suivante. Rien à ressaisir.</p></div>
   <ol class="steps" id="steps"><li class="rail" aria-hidden="true"><i id="rail-fill"></i></li><li class="step c-blue"><span class="dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h8l4 4v14H7z"/><path d="M15 3v4h4M10 12h6M10 16h4"/></svg></span><h3>Devis</h3><p>Préparez la soumission à partir de votre budget de projet.</p></li><li class="step c-orange"><span class="dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v17H6z"/><path d="M9 4v3h6V4M9 12l2 2 4-4"/></svg></span><h3>Bon de commande</h3><p>Commandez ce qu'il faut, rattaché au bon projet.</p></li><li class="step c-green"><span class="dot"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></svg></span><h3>Projet et temps</h3><p>Suivez les heures, les coûts et l'avancement en temps réel.</p></li><li class="step c-blue"><span class="dot"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg></span><h3>Facture</h3><p>Facturation progressive avec les taxes calculées.</p></li><li class="step c-green"><span class="dot"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 12h2m3 0h3M8 16h2m3 0h3"/></svg></span><h3>Comptabilité</h3><p>Paiements et écritures au même endroit, sans ressaisie.</p></li></ol>
 </div></section>
 
@@ -274,14 +274,14 @@
       <div class="callbar"><span class="rec"><i></i>Démo Kiwili · 32:10</span><span class="btns"><i></i><i></i><i class="end"></i></span></div></figure>
 </div></section>
 
-<section class="trial" id="essai"><div class="container"><div class="trial-card on-dark reveal"><div class="trial-copy">
+<section class="trial on-dark" id="essai"><div class="container"><div class="trial-card on-dark reveal"><div class="trial-copy">
   <h2>Bénéficiez d'un essai de 14 jours</h2>
   <p class="lead">Rejoignez nos 150 000 clients et simplifiez la gestion de votre entreprise dès aujourd'hui. Votre essai sans engagement de Kiwili inclut l'ensemble de nos fonctionnalités.</p>
   <a class="btn btn-accent" href="#essai" data-open="trial">Commencer</a>
 </div><svg class="markart" viewBox="0 0 40 40" aria-hidden="true"><rect class="mb1" x="6" y="20" width="6" height="9" rx="3" fill="#2aa7ff"/><rect class="mb2" x="15" y="12" width="6" height="17" rx="3" fill="#7ad03c"/><rect class="mb3" x="24" y="3" width="6" height="26" rx="3" fill="#ff9a1f"/><path class="msmile" d="M3 31c4 8 16 9 22 4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" pathLength="1"/></svg></div></div></section>
 </main>
 
-<footer class="foot"><div class="container">
+<footer class="foot on-dark"><div class="container">
   <div class="foot-grid">
     <div><a class="logo" href="#" aria-label="Kiwili"><img class="l-dark" src="assets/logo-light.png" alt="Kiwili" width="120" height="40"><img class="l-light" src="assets/logo-dark.png" alt="" width="120" height="40"></a><p style="margin-top:var(--s-4);max-width:260px">Le logiciel de gestion québécois pour les entreprises de services.</p></div>
     <div><h6>Produit</h6><ul><li><a href="#">Comptabilité</a></li><li><a href="#">Devis</a></li><li><a href="#">Facturation</a></li><li><a href="#">Gestion de projets</a></li></ul></div>

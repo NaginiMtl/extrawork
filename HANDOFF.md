@@ -127,5 +127,6 @@ Notes:
 
 - These push new branches only. The default branch of the company repo is not touched. Choose other branch names if the team has a convention.
 - `NaginiMtl/extrawork` is private. The person running the commands needs read access to it as well as push access to the company repo.
-- The branches have their own history, unrelated to the company website's history. To bring the pages into the real site, copy the files into the right folder of the website instead of merging. Check for name clashes first: this prototype uses `index.html`, `tutoriel.html`, `design-system.html`, `css/`, `js/`, `assets/` and `tools/` at its root.
+- On 2026-10-07 `Kiwili-com/website` was empty (no commits, so no default branch yet). That means there are no file clashes today, and the first push creates the first branch. If you want the v2 work to become the starting point of the repo, push it as `main` instead (`git push company claude/kiwili-v2:main`). Check the repo again before pushing, in case someone has added files since.
+- Otherwise, the branches have their own history, unrelated to the company website's history. To bring the pages into the real site, copy the files into the right folder of the website instead of merging. Check for name clashes first: this prototype uses `index.html`, `tutoriel.html`, `design-system.html`, `css/`, `js/`, `assets/` and `tools/` at its root.
 - After the copy, change the "Final home" line in section 2 and the table in `VERSIONS.md` if the branch names differ.

@@ -14,7 +14,8 @@ Redesign kiwili.com (French, Québec ERP for project-based service businesses) t
 | v2 homepage | `claude/kiwili-v2` | see `git log` | https://claude.ai/artifact/2r7wuzz47oKt5FXeB4J7jR |
 | Tutorial: gestion des droits d'accès | `claude/kiwili-v2` | `2a74e04` and later | https://claude.ai/artifact/MMLfnzVhemmqxTesmmuSyB |
 
-- Repo: `naginimtl/extrawork`. Never push new work to the v1 branch.
+- Final home: the company repository `Kiwili-com/website` (https://github.com/Kiwili-com/website). The work was built in a personal working repository, `NaginiMtl/extrawork`, because the cloud session had no access to the company repo. Branch names above refer to `NaginiMtl/extrawork`. The steps to copy them to the company repo are in section 12.
+- Never push new work to the v1 branch.
 - Git tags could not be pushed from the cloud session (the push failed three times). Branches and commits are the saved copies. See `VERSIONS.md`.
 - The preview links belong to the original account. Share them from each page's Share menu, or republish from the new account (see section 9).
 
@@ -99,6 +100,32 @@ Layout follows Asana's help article: global nav plus a "Centre d'aide" bar, left
 
 ## 11. To continue in a new session
 
-1. Give the new session access to `naginimtl/extrawork` and check out `claude/kiwili-v2`.
+1. Give the new session access to the repo that holds the work (`Kiwili-com/website` once the branches are copied, otherwise `NaginiMtl/extrawork`) and check out the v2 branch (`claude/kiwili-v2`, or `redesign-v2` if you used the names in section 12).
 2. Tell it to read `HANDOFF.md` and `VERSIONS.md` first.
 3. Ask it to confirm the plan before large changes (the client's preference).
+
+## 12. Copying the work into the company repo (manual steps)
+
+The Claude session could not attach `Kiwili-com/website` (no access for its GitHub connection), so the copy has to be done by someone who can push to both repositories.
+
+```bash
+git clone https://github.com/NaginiMtl/extrawork.git kiwili-redesign
+cd kiwili-redesign
+git remote add company https://github.com/Kiwili-com/website.git
+
+# v1 = frozen first version, v2 = current work (homepage, tutorial, HANDOFF.md, tools/)
+git push company claude/keen-fermat-ommrjd:redesign-v1
+git push company claude/kiwili-v2:redesign-v2
+
+# optional: tags (these could not be pushed from the cloud session)
+git tag v1-homepage 9d42cb5
+git tag v2-homepage 2928054
+git push company v1-homepage v2-homepage
+```
+
+Notes:
+
+- These push new branches only. The default branch of the company repo is not touched. Choose other branch names if the team has a convention.
+- `NaginiMtl/extrawork` is private. The person running the commands needs read access to it as well as push access to the company repo.
+- The branches have their own history, unrelated to the company website's history. To bring the pages into the real site, copy the files into the right folder of the website instead of merging. Check for name clashes first: this prototype uses `index.html`, `tutoriel.html`, `design-system.html`, `css/`, `js/`, `assets/` and `tools/` at its root.
+- After the copy, change the "Final home" line in section 2 and the table in `VERSIONS.md` if the branch names differ.
